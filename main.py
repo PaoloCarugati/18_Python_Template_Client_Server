@@ -59,10 +59,14 @@ def callDELETE(id):
 
 
 
-url = 'http://localhost:8080/dischi'
+url = 'http://127.0.0.1:8080/dischi'
 #print("url: " + url)
-callGET(1)
+
+
 callGET()
+
+"""
+callGET(1)
 
 disco = {
             "title": "Duke",
@@ -71,8 +75,9 @@ disco = {
             "company": "A&M"      
         }
 
-#callGET()
-#callPOST(disco)
-#callGET()
-#callDELETE(5)
-#callGET()
+callGET()
+callPOST(disco)
+callGET()
+callDELETE(5)
+callGET()
+"""

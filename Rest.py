@@ -24,11 +24,6 @@ class MyController(object):
                 return {} 
 
 
-    #def POST(self, disco):
-    #    self.dischi.append(disco)
-    #    return len(self.dischi) -1
-
-
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def POST(self):
@@ -41,10 +36,17 @@ class MyController(object):
 
 
     @cherrypy.tools.json_out()
-    def PUT(self, id=-1, **kwargs):
-        #TODO
-        return int(id)
-
+    #@cherrypy.tools.accept(media='text/plain')
+    def PUT(self, id=-1):
+        data = cherrypy.request.json
+        disco = json.loads(data, object_hook=record)
+        res = self.wrp.aggiornaDisco(id)
+        if (bool(res)):
+            return id;
+        else:
+            cherrypy.response.status = 404
+            return {} 
+            
 
     @cherrypy.tools.json_out()
     def DELETE(self, id=-1):

@@ -15,8 +15,7 @@ class WrapperDB:
     #def __init__(self, server="192.168.40.16\\SQLEXPRESS", user="CRD2122",
     #def __init__(self, server="213.140.22.237\\SQLEXPRESS", user="CRD2122",
     #           password="xxx123##", database="CRD2122"):
-    def __init__(self, server="localhost\SQLEXPRESS", user="sa", \
-               password="Password1!", database="5DINF"):
+    def __init__(self, server="PCPAOLO\SQLEXPRESS", user="sa", password="Password1!", database="5DINF", port="1433"):
         self._server=server
         self._user=user
         self._password=password
@@ -30,11 +29,23 @@ class WrapperDB:
                         password = self._password, database = self._database)
             #print(f"\nConnessione effettuata! (DB: {self._database})\n")
             return WrapperDB.conn	
-        except:
-            print(f"\nConnessione NON riuscita! (DB: {self._database})\n")
-            return 0
-        
-            
+        #except:
+        #    print(f"\nConnessione NON riuscita! (DB: {self._database})\n")
+        #    return 0
+        except _mssql.MssqlDriverException:
+            print("A MSSQLDriverException has been caught.")
+        except _mssql.MssqlDatabaseException as e:
+            print("A MSSQLDatabaseException has been caught.")
+            print('Number = ',e.number)
+            print('Severity = ',e.severity)
+            print('State = ',e.state)
+            print('Message = ',e.message)  
+        except Exception as e: 
+            print("********** EXCEPTION **********")
+            print(e)     
+            print("*******************************")     
+
+
     def disconnetti(self, co):
         #disconnessione	
         try:
@@ -82,14 +93,13 @@ class WrapperDB:
         return ret    
 
     
-    #def inserisciPost(self, autore, testo):
     def inserisciDisco(self, parametri):
         #inserisce un nuovo post
-        #parametri: (autore, testo)
+        #parametri: tupla con i valori dei parametri -> (artist, title, year, company)
         try:
             c = self.connetti() 
             cursore = c.cursor()
-            sql = "INSERT INTO PC_Records (Artist, Title, Year, Compant) VALUES (%s , %s, %d, %s)"
+            sql = "INSERT INTO PC_Records (Artist, Title, Year, Company) VALUES (%s , %s, %d, %s)"
             cursore.execute(sql, parametri)
             c.commit()
             #print("INSERIMENTO DISCO AVVENUTO")
@@ -103,7 +113,7 @@ class WrapperDB:
 
     def inserisciDiscoSP(self, parametri):
         #inserisce un nuovo post
-        #parametri: (autore, testo)
+        #parametri: tupla con i valori dei parametri -> (artist, title, year, company)
         try:
             #dichiaro id come valore di output per la SP
             id = output(int)
@@ -130,12 +140,37 @@ class WrapperDB:
             #return False
             return -1
 
+
+    def aggiornaDisco(self, id, parametri):
+        #modifica un post esistente
+        #id: id del disco
+        #parametri: tupla con i valori dei parametri -> (artist, title, year, company)
+        try:
+            #aggiungo id ai parametri
+            parametri = parametri + (id,)
+            c = self.connetti() 
+            cursore = c.cursor()
+            sql = "UPDATE PC_Records SET Artist = %s, Title = %s, Year = %d, Company = %s WHERE ID = %d"
+            cursore.execute(sql, parametri)
+            c.commit()
+            #print("AGGIORNAMENTO DISCO AVVENUTO")
+            ret = True
+            if (cursore.rowcount < 1):
+                ret = False
+            self.disconnetti(c)
+            return ret            
+        except:
+            #print("\AGGIORNAMENTO DISCO/i: Si sono verificati degli errori!")
+            self.disconnetti(c)
+            return False
+
+
     def eliminaDisco(self, id):
         #elimina un post
         try:
             c = self.connetti() 
             cursore = c.cursor()
-            sql = "DELETE PC_Recordsss WHERE id = %d"
+            sql = "DELETE PC_Records WHERE id = %d"
             cursore.execute(sql, id)
             c.commit()
             #print("ELIMINA DISCO AVVENUTO")
