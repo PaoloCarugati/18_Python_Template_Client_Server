@@ -1,5 +1,11 @@
 import requests
 #import json
+from requests.auth import HTTPBasicAuth
+
+USR = "Paolo"
+PWD = "Password123"
+
+basicauth = HTTPBasicAuth(USR, PWD)
 
 
 def callGET(id=None):
@@ -9,7 +15,7 @@ def callGET(id=None):
     else:
         getUrl = url + "/" + str(id)
     print("url: " + getUrl)
-    response = requests.get(getUrl)
+    response = requests.get(getUrl, auth=basicauth)
     print("status code: " + str(response.status_code))
     #print(response.content)
     json = response.json()
@@ -33,7 +39,8 @@ def callPOST(disco):
     response = requests.post(
         url, 
         json=disco,
-        headers=headers
+        headers=headers, 
+        auth=basicauth
     )
     print("status code: " + str(response.status_code))
     #print("response content:")
@@ -48,7 +55,7 @@ def callDELETE(id):
     print("***** DELETE *****")
     deleteUrl = url + "/" + str(id)
     print("url: " + deleteUrl)
-    response = requests.delete(deleteUrl)
+    response = requests.delete(deleteUrl, auth=basicauth)
     print("status code: " + str(response.status_code))
     #print(response.content)
     print("***************")
@@ -63,21 +70,22 @@ url = 'http://127.0.0.1:8080/dischi'
 #print("url: " + url)
 
 
-callGET()
-
-"""
 callGET(1)
 
+callGET()
+
 disco = {
+            "id": 5,
             "title": "Duke",
             "artist": "Genesis",
             "year": 1980,
             "company": "A&M"      
         }
 
-callGET()
 callPOST(disco)
+
 callGET()
+
 callDELETE(5)
+
 callGET()
-"""
