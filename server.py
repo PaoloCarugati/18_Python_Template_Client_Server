@@ -17,18 +17,23 @@ class MyController(object):
             return False
 
 
-    def __init__(self):
-        self.client = MongoClient("mongodb://localhost:27017/")
-        self.db = self.client["NOME_DB"]
-        self.collection = self.db["NOME_COLLECTIOM"]
+def __init__(self, url="mongodb://localhost:27017", db="MyDB", collection="MyCollection"):
+        #definisco delle variabili di istanza
+        self.client = MongoClient(url)
+        self.db = self.client[db]
+        self.collection = self.db[collection]
+        self.projection = {"_id": 0}
         #cancello tutto
         self.collection.delete_many({})
         #inserimento
         self.collection.insert_many(MyController.records)
 
+        
     @cherrypy.tools.json_out() #NOTA: ricordarsi di aggiungere questo decoratore se vogliamo l'output in formato json!!!
     def GET(self, id=-1):
         #scrivi qui le istruzioni per restituire i document (oppure IL document se id <> -1) della collection
+        return []
+        #ricordati di gestire il 404!
 
 
     @cherrypy.tools.json_in()
@@ -36,20 +41,24 @@ class MyController(object):
     def POST(self):
         data = cherrypy.request.json
         #scrivi qui le istruzioni per inserire un nuovo document
-        return 0
+        return 0 #in realtà devo ritornare l'id dell'elemento inserito
 
 
+    @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    #@cherrypy.tools.accept(media='text/plain')
     def PUT(self):
         data = cherrypy.request.json
         #scrivi qui le istruzioni per modificare un document esistente            
+        return 0
+        #ricordati di gestire il 404!
 
     @cherrypy.tools.json_out()
     def DELETE(self, id=-1):
         #scrivi qui le istruzioni per eliminare un document
+        return 0
+        #ricordati di gestire il 404!
 
-
+        
 #if __name__ == '__main__':
 conf = {
     '/': {
@@ -63,5 +72,8 @@ conf = {
     }
 }  
 
-#cherrypy.quickstart(MyController(), '/dischi', conf)
+#eventualmente utilizzare questa per cambiare la porta
+#cherrypy.config.update({'server.socket_port': 80})
+
+#cherrypy.quickstart(MyController(), '/qualcosa', conf)
 cherrypy.quickstart(MyController(), '/', conf)
