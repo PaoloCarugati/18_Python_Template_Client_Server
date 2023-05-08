@@ -50,7 +50,31 @@ def callPOST(disco):
     print("")
     print("")
 
+    
+def callPUT(disco):
+    print("***** POST *****")
+    print("url: " + url)
 
+    headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+    }
+
+    response = requests.put(
+        url, 
+        json=disco,
+        headers=headers, 
+        auth=basicauth
+    )
+    print("status code: " + str(response.status_code))
+    #print("response content:")
+    #print(response.content)
+    print("***************")
+    print("")
+    print("")
+    print("")    
+
+    
 def callDELETE(id):
     print("***** DELETE *****")
     deleteUrl = url + "/" + str(id)
@@ -66,7 +90,7 @@ def callDELETE(id):
 
 
 
-#url = 'http://127.0.0.1:8080/dischi'
+#url = 'http://127.0.0.1:8080/qualcosa'
 url = 'http://127.0.0.1:8080'
 
 
