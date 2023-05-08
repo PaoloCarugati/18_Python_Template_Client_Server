@@ -1,6 +1,5 @@
 import cherrypy
 import json
-from record import record
 from pymongo import MongoClient
 
 @cherrypy.expose
@@ -42,9 +41,8 @@ class MyController(object):
 
     @cherrypy.tools.json_out()
     #@cherrypy.tools.accept(media='text/plain')
-    def PUT(self, id=-1):
+    def PUT(self):
         data = cherrypy.request.json
-        disco = json.loads(data, object_hook=record)
         #scrivi qui le istruzioni per modificare un document esistente            
 
     @cherrypy.tools.json_out()
