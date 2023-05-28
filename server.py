@@ -52,6 +52,18 @@ def __init__(self, url="mongodb://localhost:27017", db="MyDB", collection="MyCol
         return 0
         #ricordati di gestire il 404!
 
+    """
+    #se usi questa PUT ricordati che nel client devi passare l'id tramite url
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def PUT(self, id):
+        data = cherrypy.request.json
+        #scrivi qui le istruzioni per modificare un document esistente            
+        return 0
+        #ricordati di gestire il 404!
+    
+    """
+        
     @cherrypy.tools.json_out()
     def DELETE(self, id=-1):
         #scrivi qui le istruzioni per eliminare un document
