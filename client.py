@@ -51,7 +51,7 @@ def callPOST(disco):
     print("")
 
     
-def callPUT(disco):
+def callPUT(record):
     print("***** POST *****")
     print("url: " + url)
 
@@ -62,7 +62,7 @@ def callPUT(disco):
 
     response = requests.put(
         url, 
-        json=disco,
+        json=record,
         headers=headers, 
         auth=basicauth
     )
@@ -74,6 +74,33 @@ def callPUT(disco):
     print("")
     print("")    
 
+"""
+#utilizza questa se nella PUT del server hai definito il parametro id
+def callPUT(record, id):
+    print("***** POST *****")
+    putUrl = url + "/" + str(id)
+    print("url: " + putUrl)
+
+    headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+    }
+
+    response = requests.put(
+        putUrl, 
+        json=record,
+        headers=headers, 
+        auth=basicauth
+    )
+    print("status code: " + str(response.status_code))
+    #print("response content:")
+    #print(response.content)
+    print("***************")
+    print("")
+    print("")
+    print("")    
+"""
+    
     
 def callDELETE(id):
     print("***** DELETE *****")
